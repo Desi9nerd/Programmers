@@ -1,6 +1,5 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <cstring>
+#include <string>
 using namespace std;
 
 int main() {
@@ -10,16 +9,16 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         string s;
-        getline(cin, s);
+        cin >> s;
 
-        char ch[51];
+        
         int cnt = 0;
-        strcpy(ch, s.c_str());
+        
 
-        for (int i = 0; i < strlen(ch); i++)
+        for (int i = 0; i < s.length(); i++)
         {
-            if (ch[i] == '(') cnt++;
-            else if (ch[i] == ')') cnt--;
+            if (s[i] == '(') cnt++;
+            else if (s[i] == ')') cnt--;
 
             if (cnt < 0) break;
         }
@@ -28,4 +27,3 @@ int main() {
     }
     return 0;
 }
-
