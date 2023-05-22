@@ -3,15 +3,14 @@
 using namespace std;
 
 int n, i=0, j=0, cnt=0;
-vector<int> v1, v2;
+vector<pair<int, int>> v;
 
 void Hannoi(int n, int from, int mid, int to)
 {
 	if (n == 0) return;
 
 	Hannoi(n-1, from, to, mid);
-	v1.push_back(from);
-	v2.push_back(to);
+	v.push_back(pair<int, int>(from, to));
 	Hannoi(n-1, mid, from, to);
 	cnt++;
 }
@@ -24,9 +23,9 @@ int main()
 
 	printf("%d\n", cnt);
 
-	for(int i=0; i<v1.size(); i++)
+	for(int i=0; i<v.size(); i++)
 	{
-		printf("%d %d\n", v1[i], v2[i]);
+		printf("%d %d\n", v[i].first, v[i].second);
 	}
 
 	return 0;
