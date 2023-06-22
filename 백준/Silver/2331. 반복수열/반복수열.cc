@@ -2,7 +2,7 @@
 #include <cmath>
 using namespace std;
 
-int a, p, digit, nextNum, i=0, cnt=0, result;
+int a, p, nextNum, i=0, cnt=0;
 int box[10000];
 
 int main() {
@@ -17,16 +17,13 @@ int main() {
 	{
 		cnt++;
 		nextNum = 0;
-		//cout << "a: " << a;
 
 		while (a > 0)
 		{
-			digit = a % 10;
-			nextNum += pow(digit, p);
+			nextNum += pow(a % 10, p);
 
 			a /= 10;
 		}
-		//cout << "  nextNum: " << nextNum << "\n";
 		box[++i] = nextNum;
 		a = nextNum;
 
@@ -34,21 +31,12 @@ int main() {
 		{
 			if (nextNum == box[k])
 			{
-				result = k;
+				cout << k;
 
-				goto exitLoop;
-			}
-			
-		}
+				return 0;
+			}			
+		}//for
 	}
-
-	exitLoop:
-
-	//for (int i = 0; i < 10; i++)
-	//	cout << box[i] << "\n";
-
-
-	cout << result;
 
 	return 0;
 }
