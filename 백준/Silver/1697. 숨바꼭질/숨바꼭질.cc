@@ -30,12 +30,12 @@ void BFS(int n, int k)
 			Q.push({ x - 1, sec + 1 });
 			ch[x - 1] = 1;
 		}
-		if (ch[x+1]==0 && x+1 <= k * 2)
+		if (ch[x+1]==0 && x+1 < k * 2)
 		{
 			Q.push({ x + 1, sec + 1 });
 			ch[x + 1] = 1;
 		}
-		if (ch[x*2]==0 && x*2 <= k * 2)
+		if (ch[x*2]==0 && x*2 < k * 2)
 		{
 			Q.push({ x * 2, sec + 1 });
 			ch[x * 2] = 1;			
