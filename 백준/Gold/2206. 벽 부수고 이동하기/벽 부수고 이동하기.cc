@@ -15,7 +15,7 @@ struct Pos{
 	int wallbreak; // 벽을 부셨는지 여부 (부셨으면 1 아니면 0)
 };
 queue<Pos> Q; // BFS 큐, (y, x) 좌표와 벽을 부셨는지 여부를 담음
-vector<vector<vector<int>>> check;; // 각 위치에서 벽 부셨는지 확인하는 배열
+vector<vector<vector<int>>> check;; // 각 위치에 방문했는지 체크하는 배열
 
 int main()
 {
@@ -34,9 +34,9 @@ int main()
 	}
 	
 	Q.push({ 1, 1, 0 }); // 시작점
-	check[1][1][0] = 1; //시작점 체크
+	check[1][1][0] = 1; // 시작점 방문체크, 마지막 [0]은 벽 부섰는지 체크
 
-	int answer = 1; // 시작하는 칸도 카운팅
+	int answer = 1; // 시작하는 칸도 카운팅(문제에서 처음도 카운팅한다고 함)
 
 	while(!Q.empty())
 	{
