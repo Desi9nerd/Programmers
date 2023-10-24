@@ -6,20 +6,19 @@ using namespace std;
 struct File{
     string head;
     int number;
-    string tail;
 	int index;
 
-    File(string a, int b, string c, int d)
+    File(string a, int b, int c)
     {
-        head = a; number = b; tail = c; index = d;
+        head = a; number = b; index = c;
     }
 
-    bool operator<(const File& f)
+    bool operator<(const File& f) const
 	{
-        if (head != f.head) {
+        if(head != f.head){
             return head < f.head;
         }
-        if (number != f.number) {
+        if(number != f.number){
             return number < f.number;
         }
         return index < f.index;
@@ -31,50 +30,31 @@ vector<File> v;
 vector<string> solution(vector<string> files) {
     vector<string> answer;
 
-    for(int i = 0; i < files.size(); i++)
-    {
-        string str = files[i];
+	for(int i = 0; i<files.size(); i++){
+		string str = files[i];
+		string head = "", num_str="";
+		int j=0;
 
-        for (char& c : str) {
-            if(isupper(c))
-				c = tolower(c);
-        };
+		while(j<str.size()){
+			if(isdigit(str[j])) break;
+			head += tolower(str[j]);
+			j++;
+		}
 
-        string head = "", tail = "";
-        int number=0;
-        bool flag = false;
-        int tmp = 0;
+		while(j<str.size()){
+			if(!isdigit(str[j])) break;
+			num_str += str[j];
+			j++;
+		}
 
-    	for(int j = 0; j < str.size(); j++)
-        {
-            if ('0' <= str[j] && str[j] <= '9' && flag == false) {
-                tmp = j;
-                flag = true;
-	        }
-            else if (!('0' <= str[j] && str[j] <= '9') && flag == true) {
-                head = str.substr(0, tmp);
-                number = stoi(str.substr(tmp, j-tmp));
-                tail = str.substr(j);
-                break;
-            }
+    	v.push_back({head , stoi(num_str), i});
+   }
 
-            if (j == str.size() - 1) { // 마지막 문자열인 경우
-                if (flag) { // 숫자가 이미 나온 경우
-                    head = str.substr(0, tmp);
-                    number = stoi(str.substr(tmp));
-                    tail = "";
-                }
-            }
-        }
+	sort(v.begin(), v.end());
 
-        v.push_back({ head, number, tail, i });
-    }
+	for(int i=0;i<v.size();i++){
+    	answer.push_back(files[v[i].index]);
+   }
 
-    sort(v.begin(), v.end());
-
-	for(int i = 0; i<v.size(); i++){
-        answer.push_back(files[v[i].index]);
-	}
-
-    return answer;
+	return answer;
 }
