@@ -21,6 +21,7 @@ int main(){
 
 	int left = 0;
 	int right = n - 1;
+
 	while (left < right)
 	{
 		int sumSol = v[left] + v[right];
@@ -29,19 +30,19 @@ int main(){
 			cout << v[left] << " " << v[right] << "\n";
 			return 0;
 		}
-		
-        if(abs(sumSol) < resultSumSol){
-            resultSumSol = abs(sumSol);
-            firstSol = v[left];
-            secondSol = v[right];
-        }
+
+		if (abs(sumSol) < resultSumSol) {
+			resultSumSol = abs(sumSol);
+			firstSol = v[left];
+			secondSol = v[right];
+		}
 
 		if (sumSol > 0) {
 			right--;
         } else {
 			left++;
         }
-    }
+	}
 
 	cout << firstSol << " " << secondSol << "\n";
 	
