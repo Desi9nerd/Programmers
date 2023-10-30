@@ -37,11 +37,10 @@ int main(){
 			secondSol = v[right];
 		}
 
-		if (sumSol > 0) {
+		if (sumSol > 0) 
 			right--;
-        } else {
+        else 
 			left++;
-        }
 	}
 
 	cout << firstSol << " " << secondSol << "\n";
