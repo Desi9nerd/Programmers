@@ -8,11 +8,6 @@ vector<string> answer;
 map<string, int> myMap;
 int ch[10];
 
-bool Compare(const string& s1, const string& s2)
-{
-    return s1 < s2;
-}
-
 void Combination(string ord, string str, int idx, int select)
 {
 	if(str.size() == select){
@@ -55,7 +50,7 @@ vector<string> solution(vector<string> orders, vector<int> course) {
         }
     }
 
-    sort(answer.begin(), answer.end(), Compare);
+    sort(answer.begin(), answer.end());
 
     return answer;
 }
