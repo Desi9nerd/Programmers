@@ -5,7 +5,7 @@ using namespace std;
 
 int n;
 long long answer; // 수열의 두 수를 묶었을 때 나올 수 있는 수열의 최대합
-vector<int> negative, zero, positive;
+vector<int> negative, positive;
 
 int main(){
 	ios::sync_with_stdio(false);
@@ -15,65 +15,32 @@ int main(){
 	int input;
 	for(int i = 0; i < n; i++){
 		cin >> input;
-		if (input == 0) zero.push_back(input);
-		else if (input < 0) negative.push_back(input);
-		else if (input > 0) positive.push_back(input);
+		if (input <= 0) negative.push_back(input); // 0과 음수를 negative 벡터에 넣음
+		else if (input > 1) positive.push_back(input); // 1보다 큰 수를 positive 벡터에 넣음
+		else answer += 1; // 1은 미리 더해줌
 	}
-	sort(negative.begin(), negative.end());
-	sort(positive.rbegin(), positive.rend());
+	
+	sort(negative.begin(), negative.end()); // negative 벡터를 오름차순으로 정렬
+	sort(positive.rbegin(), positive.rend()); // positive 벡터를 내림차순으로 정렬
 
-	if(negative.size() >= 2)
-	{
-		for (int i = 0; i < negative.size() - 1; i += 2) {
-			answer += negative[i] * negative[i + 1];
-		}
+	if(negative.size() % 2 == 1) { // negative 벡터의 크기가 홀수라면
+		answer += negative.back();
+		negative.pop_back();
 	}
-	if (positive.size() >= 2)
-	{
-		for (int i = 0; i < positive.size() - 1; i += 2) {
-			answer += max(positive[i] * positive[i + 1], positive[i] + positive[i + 1]);
-		}
+	while(negative.size() >= 2) { // 음수 묶기
+		long long first = negative.back(); negative.pop_back();
+		long long second = negative.back(); negative.pop_back();
+		answer += first * second;
 	}
 
-	if (zero.size() == 0){ // 0의 개수 == 0
-		if (negative.size() % 2 == 1) answer += negative[negative.size() - 1];
-		if (positive.size() % 2 == 1) answer += positive[positive.size() - 1];
-		cout << answer << "\n";
-		return 0;
+	if(positive.size() % 2 == 1) { // positive 벡터의 크기가 홀수라면
+		answer += positive.back();
+		positive.pop_back();
 	}
-
-	if (zero.size() % 2 == 0){ // 0의 개수가 짝수
-		if (negative.size() % 2 == 1 && positive.size() % 2 == 1)
-		{
-			if (abs(negative[negative.size() - 1]) <= abs(positive[positive.size() - 1]))
-				answer += negative[negative.size() - 1] + positive[positive.size() - 1];
-			// else에서는 negative[negative.size() - 1] * 0 + positive[positive.size() - 1] * 0
-		}
-		else if (negative.size() % 2 == 1 && positive.size() % 2 == 0)
-		{
-			if (abs(negative[negative.size() - 1]) > positive[positive.size() - 1] * positive[positive.size() - 2])
-				answer -= positive[positive.size() - 1];
-			else
-				answer += negative[negative.size() - 1];
-		}
-		else if (negative.size() % 2 == 0 && positive.size() % 2 == 1)
-		{
-			answer += positive[positive.size() - 1];
-		}
-	}
-	else { // 0의 개수가 홀수
-		if (negative.size() % 2 == 1 && positive.size() % 2 == 1)
-		{			
-			answer += negative[negative.size() - 1] * 0 + positive[positive.size() - 1];
-		}
-		else if (negative.size() % 2 == 1 && positive.size() % 2 == 0)
-		{
-			answer += negative[negative.size() - 1] * 0;
-		}
-		else if (negative.size() % 2 == 0 && positive.size() % 2 == 1)
-		{
-			answer += positive[positive.size() - 1];
-		}
+	while(positive.size() >= 2) { // 양수 묶기
+		long long first = positive.back(); positive.pop_back();
+		long long second = positive.back(); positive.pop_back();
+		answer += first * second;
 	}
 
 	cout << answer << "\n";
