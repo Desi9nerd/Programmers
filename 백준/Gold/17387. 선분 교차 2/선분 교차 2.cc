@@ -3,8 +3,7 @@ using namespace std;
 
 #define x first
 #define y second
-using int64 = long long;
-using Point = pair<int64, int64>;
+using Point = pair<long long, long long>;
 
 int CCW(const Point& a, const Point& b, const Point& c)
 {
