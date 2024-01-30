@@ -1,49 +1,44 @@
 #include <iostream>
 using namespace std;
 
-#define x first
-#define y second
-using Point = pair<long long, long long>;
+using int64 = long long;
 
-int CCW(const Point& a, const Point& b, const Point& c)
+struct Point
 {
-	// 행렬식을 사용해서 외적 구하기
-	long long result = (a.x * b.y + b.x * c.y + c.x * a.y) - (a.y * b.x + b.y * c.x + c.y * a.x);
+	bool operator<(const Point& other) const { return x < other.x || (x == other.x && y < other.y); }
+	bool operator>(const Point& other) const { return other < *this; }
+	bool operator<=(const Point& other) const { return !(other < *this); }
+	bool operator>=(const Point& other) const { return !(*this < other); }
+	int64 x;
+	int64 y;
+};
 
-	if (result > 0) return 1;		 // CCW. 반시계 방향
-	else if (result == 0) return 0; // 일직선
-	else return -1;					 // CW. 시계 방향
+int CCW(Point a, Point b, Point c)
+{
+	int64 ret = (a.x * b.y + b.x * c.y + c.x * a.y) - (a.y * b.x + b.y * c.x + c.y * a.x);
+	if (ret > 0) return 1;
+	if (ret < 0) return -1;
+	return 0;
 }
 
-int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(0); cout.tie(0);
+int main()
+{
+	Point A, B, C, D;
+	cin >> A.x >> A.y >> B.x >> B.y;
+	cin >> C.x >> C.y >> D.x >> D.y;
 
-	Point a, b, c, d;
-	cin >> a.x >> a.y;
-	cin >> b.x >> b.y;
-	cin >> c.x >> c.y;
-	cin >> d.x >> d.y;
+	int abc = CCW(A, B, C);
+	int abd = CCW(A, B, D);
+	int cda = CCW(C, D, A);
+	int cdb = CCW(C, D, B);
 
-	// CCW 구하기
-	int ABC = CCW(a, b, c);
-	int ABD = CCW(a, b, d);
-	int CDA = CCW(c, d, a);
-	int CDB = CCW(c, d, b);
-
-	if (ABC * ABD == 0 && CDA * CDB == 0)
+	if (abc * abd == 0 && cda * cdb == 0)
 	{
-		if (a > b) swap(a, b);
-		if (c > d) swap(c, d);
-
-		if (a <= d && c <= b) cout << 1;
-		else cout << 0;
-
+		if (A > B) swap(A, B);
+		if (C > D) swap(C, D);
+		cout << (A <= D && C <= B);
 		return 0;
 	}
 
-	if (ABC * ABD <= 0 && CDA * CDB <= 0) cout << 1;
-	else cout << 0;
-
-	return 0;
+	cout << (abc * abd <= 0 && cda * cdb <= 0);
 }
