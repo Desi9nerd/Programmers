@@ -1,50 +1,30 @@
-#include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-struct Value {
-    int rowNum; int colVal; int firstVal;
+int Col = 0;
 
-    Value(int a, int b, int c) {
-        rowNum = a;
-        colVal = b;
-        firstVal = c;
-    }
+bool Compare(const vector<int>& a, const vector<int>& b) {
+    if (a[Col] == b[Col])
+        return a[0] > b[0];
 
-    bool operator<(const Value& oper) const
-    {
-        if (colVal == oper.colVal) {
-            return firstVal > oper.firstVal;
-        }
-
-        return colVal < oper.colVal;
-    }
-};
-
-vector<Value> order; // 행, col번째 값, 첫번째 컴럼의 값
+    return a[Col] < b[Col];
+}
 
 int solution(vector<vector<int>> data, int col, int row_begin, int row_end) {
-   
-    int r = data.size();
-    int c = data[0].size();
     
-    for (int i = 0; i < r; i++) {
-        order.push_back({ i, data[i][col-1], data[i][0] });
-    }
+    Col = col - 1; // 문제는 0이 아닌 1부터 시작이기 때문에 -1
 
-    sort(order.begin(), order.end());
-
+	sort(data.begin(), data.end(), Compare); // 문제 조건에 맞게 정렬
 
     int answer = 0;
     for (int i = row_begin; i <= row_end; i++) 
     {
         int temp = 0;
-        for (int j = 0; j < c; j++) {
-            temp += (data[order[i-1].rowNum][j] % i);
+        for (int j = 0; j < data[0].size(); j++) {
+            temp += data[i - 1][j] % i; // mod 연산
         }
-        answer = answer ^= temp;
+        answer = answer ^ temp; // XOR 연산
     }
 
     return answer;
