@@ -16,15 +16,15 @@ int solution(int n) {
     dp[3] = 0;
     dp[4] = 11;
 
-    long long sum = 1;
+    dp[0] = 1;
+    long long sum = 0;
 
-    for (int i = 6; i <= n; i += 2)
+    for (int i = 4; i <= n; i += 2)
     {
         sum += dp[i - 4];
         sum %= MOD;
 
         dp[i] = (dp[i - 2] * 3 + sum * 2) % MOD;
-
     }
     
     return dp[n];
