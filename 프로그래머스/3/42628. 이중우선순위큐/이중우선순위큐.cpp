@@ -1,40 +1,58 @@
-#include <iostream>
 #include <string>
 #include <vector>
-#include <deque>
-#include <algorithm>
+#include <queue>
+#include <cstring>
+#include <functional>
+
 using namespace std;
 
-vector<int> solution(vector<string> oper) {
+priority_queue<int,vector<int>,greater<int>> min_heap;
+priority_queue<int> max_heap;
+
+vector<int> solution(vector<string> arguments) {
     vector<int> answer;
 
-    deque<int> dQ;
-
-    for (int i = 0; i < oper.size(); i++)
+    for(int i=0;i<arguments.size();i++)
     {
-        if (oper[i][0] == 'I') {
-            int num = stoi(oper[i].substr(2));
-            dQ.push_back(num);
-            sort(dQ.begin(), dQ.end());
+        string a = arguments[i];
+        char o = a[0];
+        int n = atoi(a.substr(2).c_str());
+
+        if(o == 'I')
+        {
+            min_heap.push(n);
+            max_heap.push(n);
         }
-        else if (oper[i][0] == 'D') {
-            if (oper[i][2] == '1') {
-                if (!dQ.empty()) dQ.pop_back();
-            }
-            else if (oper[i][2] == '-') {
-                if (!dQ.empty()) dQ.pop_front();
-            }
+        else if(o == 'D' && n == 1)
+        {
+            if(max_heap.empty()) continue;
+            if(max_heap.top() == min_heap.top()) min_heap.pop();
+            max_heap.pop();
+        }
+        else if (o == 'D' && n == -1)
+        {
+            if(min_heap.empty()) continue;
+            if(max_heap.top() == min_heap.top()) max_heap.pop();
+            min_heap.pop();
+        }
+
+        if(max_heap.top() < min_heap.top())
+        {
+            while(!min_heap.empty()) min_heap.pop();
+            while(!max_heap.empty()) max_heap.pop();
         }
     }
 
-    if (dQ.empty()) {
-        answer.emplace_back(0);
-        answer.emplace_back(0);
+    if(min_heap.empty()) 
+    {
+        answer.push_back(0);
+        answer.push_back(0);
     }
-    else {
-        answer.emplace_back(dQ.back());
-        answer.emplace_back(dQ.front());
+    else
+    {
+        answer.push_back(max_heap.top());
+        answer.push_back(min_heap.top());
     }
-    
+
     return answer;
 }
