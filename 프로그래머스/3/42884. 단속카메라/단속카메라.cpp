@@ -22,7 +22,7 @@ int solution(vector<vector<int>> routes) {
 
     while (i < n)
     {
-        if (routes[i][0] > curr) {
+        if (curr < routes[i][0]) {
             curr = routes[i][1];
             answer++;
         }
