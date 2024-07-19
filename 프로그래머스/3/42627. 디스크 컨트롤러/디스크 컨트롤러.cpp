@@ -1,33 +1,40 @@
 #include <iostream>
+#include <queue>
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-bool Compare(const vector<int>& a, const vector<int>& b) {
-    if (a[1] == b[1]) return a[0] < b[0];
-    return a[1] < b[1];
-}
+// 비교 함수 객체
+struct Compare {
+    bool operator()(const vector<int>& a, const vector<int>& b) {
+        return a[1] > b[1]; // 소요 시간이 작은 순으로 정렬
+    }
+};
 
 int solution(vector<vector<int>> jobs) {
     int n = jobs.size();
-    sort(jobs.begin(), jobs.end(), Compare);
-    
-    int time = 0, start = 0;
+    sort(jobs.begin(), jobs.end()); // 요청 시간 기준으로 정렬
 
-    while (!jobs.empty())
+    priority_queue<vector<int>, vector<vector<int>>, Compare> pQ;
+    int answer = 0, i = 0, time = 0;
+
+    while (i < jobs.size() || !pQ.empty()) 
     {
-	    for (int i = 0; i < jobs.size(); i++)
-	    {
-		    if (jobs[i][0] <= start){
-                time += start + (jobs[i][1] - jobs[i][0]);
-                start += jobs[i][1];
-                jobs.erase(jobs.begin() + i);
-                break;
-		    }
+        // 현재 시간에서 실행 가능한 모든 작업을 큐에 넣음
+        while (i < jobs.size() && time >= jobs[i][0]) {
+            pQ.push(jobs[i++]);
+        }
 
-            if (i == jobs.size() - 1) start++;
-	    }
+        if (!pQ.empty()) { 
+            vector<int> job = pQ.top();
+            pQ.pop();
+            time += job[1];              // 작업 소요 시간을 더함
+            answer += time - job[0];     // 작업 종료 시간 - 작업 요청 시간 = 대기 시간
+        } 
+        else {
+            time = jobs[i][0];           // 다음 작업의 요청 시간으로 시간 설정
+        }
     }
 
-    return time / n;
+    return answer / n; // 평균 대기 시간 반환
 }
