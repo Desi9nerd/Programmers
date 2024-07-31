@@ -27,14 +27,14 @@ void FindBrackets()
 	}
 }
 
-void Generate(int idx, string str, const vector<bool> ch)
+void Generate(int idx, string str, const vector<int> ch)
 {
 	if (idx == n){
 		results.insert(str);
 		return;
 	}
 
-	if (ch[idx]) // idx 위치의 문자 생략
+	if (ch[idx] == 1) // idx 위치의 문자 생략
 	{
 		Generate(idx + 1, str, ch);
 	}
@@ -48,13 +48,13 @@ void Cal()
 {
 	for (int bitmask = 1; bitmask < (1 << brackets.size()); bitmask++)
 	{
-		vector<bool> ch(n, false);
+		vector<int> ch(n, 0);
 
 		for (int i = 0; i < brackets.size(); i++)
 		{
 			if (bitmask & (1 << i)) {
-				ch[brackets[i].first] = true;
-				ch[brackets[i].second] = true;
+				ch[brackets[i].first] = 1;
+				ch[brackets[i].second] = 1;
 			}
 		}
 
