@@ -29,7 +29,7 @@ void FindBrackets()
 
 void Generate(int idx, string str, const vector<int> ch)
 {
-	if (idx == n){
+	if (idx == input.size()){
 		results.insert(str);
 		return;
 	}
@@ -44,23 +44,48 @@ void Generate(int idx, string str, const vector<int> ch)
 	}
 }
 
+void CalHelper(int cnt, vector<int>& ch)
+{
+	if (cnt == brackets.size()) {
+		Generate(0, "", ch);
+		return;
+	}
+
+	// 현재 괄호 쌍을 제거하지 않는 경우
+	CalHelper(cnt + 1, ch);
+
+	// 현재 괄호 쌍을 제거하는 경우
+	ch[brackets[cnt].first] = 1;
+	ch[brackets[cnt].second] = 1;
+	CalHelper(cnt + 1, ch);
+	ch[brackets[cnt].first] = 0;
+	ch[brackets[cnt].second] = 0;
+}
+
 void Cal()
 {
-	for (int bitmask = 1; bitmask < (1 << brackets.size()); bitmask++)
-	{
-		vector<int> ch(n, 0);
+	vector<int> ch(n, 0);
 
-		for (int i = 0; i < brackets.size(); i++)
-		{
-			if (bitmask & (1 << i)) {
-				ch[brackets[i].first] = 1;
-				ch[brackets[i].second] = 1;
-			}
-		}
-
-		Generate(0, "", ch);
-	}
+	CalHelper(0, ch);
 }
+
+//void Cal()
+//{
+//	for (int bitmask = 1; bitmask < (1 << brackets.size()); bitmask++)
+//	{
+//		vector<int> ch(n, 0);
+//
+//		for (int i = 0; i < brackets.size(); i++)
+//		{
+//			if (bitmask & (1 << i)) {
+//				ch[brackets[i].first] = 1;
+//				ch[brackets[i].second] = 1;
+//			}
+//		}
+//
+//		Generate(0, "", ch);
+//	}
+//}
 
 int main(){
 	ios::sync_with_stdio(false);
@@ -72,8 +97,11 @@ int main(){
 	FindBrackets();
 	Cal();
 
+	int i = 0;
 	for (const auto& iter : results)
 	{
+		i++;
+		if (i == 1) continue;
 		cout << iter << "\n";
 	}
 
