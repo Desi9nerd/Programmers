@@ -41,7 +41,8 @@ int main(){
 			answer |= ((1 << 21) - 1);
 		}
 		else if (input == "empty") {
-			answer &= ~((1 << 21) - 1);
+			//answer &= ~((1 << 21) - 1);
+			answer = 0;
 		}
 	}
 
