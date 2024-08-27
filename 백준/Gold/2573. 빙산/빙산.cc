@@ -7,7 +7,7 @@ int dirY[4] = { -1, 0, 1, 0 };
 int dirX[4] = { 0, -1, 0, 1 };
 
 struct Info {
-	int y, x, h;
+	int y, x;
 };
 
 int n, m;
@@ -17,55 +17,57 @@ queue<Info> Q;
 void GlacierMelting()
 {
 	vector<vector<int>> temp = v;
-	int T = Q.size();
+	queue<Info> updatedQ;
 
-	for (int y = 0; y < n; y++) {
-		for (int x = 0; x < m; x++) 
-		{
-			if (v[y][x] > 0)
-			{
-				int adjOcean = 0;	// 4면 중 인접한 바다 수
-
-				for (int i = 0; i < 4; i++)
-				{
-					int ny = y + dirY[i];
-					int nx = x + dirX[i];
-
-					if (ny < 0 || n <= ny || nx < 0 || m <= nx) continue;
-
-					if (v[ny][nx] == 0) {
-						adjOcean++;
-					}
-				}
-
-				temp[y][x] = max(0, v[y][x] - adjOcean);
-			}
-		}
-	}
-
-	v = temp;
-}
-
-void BFS(int y, int x, vector<vector<int>>& ch)
-{
-	queue<pair<int, int>> q;
-	q.push({ y, x });
-	ch[y][x] = 1;
-
-	while (!q.empty())
+	while(!Q.empty())
 	{
-		int y = q.front().first;
-		int x = q.front().second;
-		q.pop();
+		int y = Q.front().y;
+		int x = Q.front().x;
+		Q.pop();
 
-		for (int i = 0; i < 4; i++)
-		{
+		int adjOceans = 0;
+		for (int i = 0; i < 4; i++){
 			int ny = y + dirY[i];
 			int nx = x + dirX[i];
 
 			if (ny < 0 || n <= ny || nx < 0 || m <= nx) continue;
 
-			if (v[ny][nx] > 0 && ch[ny][nx] == 0) {
+			if (v[ny][nx] == 0){
+				adjOceans++;
+			}
+		}
+
+		int newHeight = max(0, v[y][x] - adjOceans);
+		temp[y][x] = newHeight;
+
+		if (newHeight > 0){
+			updatedQ.push({ y, x});
+		}
+	}
+
+	v = temp;
+	Q = updatedQ;
+}
+
+void BFS(int y, int x, vector<vector<int>>& ch)
+{
+	queue<Info> q;
+	q.push({ y, x });
+	ch[y][x] = 1;
+
+	while (!q.empty())
+	{
+		int y = q.front().y;
+		int x = q.front().x;
+		q.pop();
+		
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dirY[i];
+			int nx = x + dirX[i];
+
+			if (ny < 0 || n <= ny || nx < 0 || m <= nx) continue;
+
+			if (ch[ny][nx] == 0 && v[ny][nx] > 0){
 				q.push({ ny, nx });
 				ch[ny][nx] = 1;
 			}
@@ -75,21 +77,23 @@ void BFS(int y, int x, vector<vector<int>>& ch)
 
 int CountGlacierGroups()
 {
-	int group = 0;
-	vector<vector<int>> ch(n, vector<int>(m));
+	GlacierMelting();
 
+	vector<vector<int>> ch(n, vector<int>(m, 0));
+
+	int groupCnt = 0;
 	for (int y = 0; y < n; y++) {
 		for (int x = 0; x < m; x++) 
 		{
 			if (v[y][x] > 0 && ch[y][x] == 0)
 			{
 				BFS(y, x, ch);
-				group++;
+				groupCnt++;
 			}
 		}
 	}
 
-	return group;
+	return groupCnt;
 }
 
 int main() {
@@ -103,31 +107,28 @@ int main() {
 		for (int x = 0; x < m; x++) {
 			cin >> v[y][x];
 
-			if (v[y][x] != 0) {
-				Q.push({ y, x, v[y][x] });
+			if (v[y][x] > 0) {
+				Q.push({ y, x });
 			}
 		}
 	}
 
 	int answer = 0;
-
-	while (true) 
+	while(true)
 	{
+		answer++;
+
 		int groups = CountGlacierGroups();
 
-		if (groups == 0) 
-		{
+		if (groups == 0){
 			answer = 0;
 			break;
 		}
-		else if (groups > 1)
-		{
+		else if (groups >= 2){
 			break;
 		}
-
-		GlacierMelting();
-		answer++;
 	}
+
 
 	cout << answer;
 
